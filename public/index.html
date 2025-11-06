@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>恋爱占有欲测试 · 可爱版（邀请制）</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#fff7fb; --card:#fff; --text:#333; --muted:#6b7280;
+      --primary:#ff9bd2; --primary-2:#c6b5ff; --accent:#a7f3d0;
+      --radius:20px; --shadow:0 12px 30px rgba(0,0,0,.12)
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:radial-gradient(800px 500px at -10% -10%, #ffe4f4 0, transparent 60%),
+                 radial-gradient(900px 650px at 110% 0%, #eef2ff 0, transparent 60%),
+                 var(--bg);
+      color:var(--text);
+      font:16px/1.7 Nunito, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    .container{max-width:820px; margin:0 auto; padding:20px}
+    header{position:sticky; top:0; background:rgba(255,255,255,.7); backdrop-filter: blur(8px); border-bottom:1px solid #f3e8ff}
+    nav{display:flex; justify-content:space-between; align-items:center; height:60px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:900}
+    .logo{width:28px; height:28px; border-radius:8px; background:conic-gradient(from 180deg, var(--primary), var(--primary-2), var(--accent)); box-shadow:var(--shadow)}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.95)); border:1px solid #f3e8ff; border-radius:var(--radius); box-shadow:var(--shadow); padding:22px}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 16px; border-radius:14px; border:1px solid #f3e8ff; color:#4b5563; background:#fff; cursor:pointer}
+    .btn-primary{background:linear-gradient(135deg, var(--primary), var(--primary-2)); color:#fff; font-weight:900}
+    .btn-danger{background:#fee2e2; border-color:#fecaca; color:#b91c1c}
+    .muted{color:var(--muted)}
+    .center{display:grid; place-items:center}
+    .pill{display:inline-block; padding:6px 12px; border-radius:999px; background:#fef3ff; border:1px solid #f3e8ff; color:#7c3aed; font-size:12px; font-weight:700}
+    .progress{height:10px; background:#f3e8ff; border-radius:999px; overflow:hidden}
+    .progress > span{display:block; height:100%; background:linear-gradient(90deg, var(--primary), var(--primary-2)); width:0%}
+    .options{display:grid; gap:12px; margin-top:14px}
+    .option{padding:14px 16px; border-radius:14px; border:1px solid #f3e8ff; background:#fff; transition:.15s transform, .15s box-shadow}
+    .option:hover{transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.08)}
+    .qnum{font-weight:900; color:#a855f7}
+    .big{font-size:26px; font-weight:900; letter-spacing:.3px}
+    footer{padding:40px 0; color:#9ca3af; border-top:1px solid #f3e8ff; margin-top:28px}
+
+    /* 结果页 */
+    .result-card .score-wrap{display:grid; gap:10px; justify-items:center}
+    .result-card .score{font-size:72px; font-weight:900; line-height:1;
+      background:linear-gradient(135deg, var(--primary), var(--primary-2));
+      -webkit-background-clip:text; background-clip:text; color:transparent}
+    .result-card .badge{display:inline-block; margin-top:4px; padding:6px 10px; border-radius:999px; font-weight:900; font-size:13px}
+    .badge-low{background:#ecfeff; color:#047481; border:1px solid #a5f3fc}
+    .badge-mid{background:#f0f9ff; color:#075985; border:1px solid #bae6fd}
+    .badge-high{background:#fff7ed; color:#9a3412; border:1px solid #fed7aa}
+    .badge-very{background:#fef2f2; color:#991b1b; border:1px solid #fecaca}
+
+    .meter{width:100%; max-width:520px}
+    .meter .bar{height:16px; width:100%; background:#f3e8ff; border:1px solid #f3e8ff;
+      border-radius:999px; overflow:hidden}
+    .meter .bar > span{display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--primary), var(--primary-2))}
+    .meter .ticks{display:flex; justify-content:space-between; font-size:12px; color:#6b7280; margin-top:6px}
+    .meter .ticks span{min-width:60px; text-align:center}
+
+    .legend{margin-top:14px; padding:12px; border:1px dashed #f3e8ff; border-radius:14px; background:#fff}
+    .legend li{margin:6px 0}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="brand"><span class="logo"></span>恋爱占有欲测试</div>
+        <span class="pill">邀请制</span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Step 1: 验证码/邀请码 -->
+    <section id="step-invite" class="card">
+      <div class="center">
+        <div class="big">🔒 输入验证码</div>
+        <p class="muted">每个验证码仅限一人使用，用于进入本测试。</p>
+      </div>
+      <form id="inviteForm" style="display:grid; gap:12px; justify-items:center; margin-top:10px">
+        <input id="code" required placeholder="例如：a1B2c3D4" style="width:260px; padding:12px 14px; border-radius:12px; border:1px solid #f3e8ff; background:#fff; color:#374151">
+        <button class="btn btn-primary" type="submit">绑定并继续</button>
+        <span id="inviteMsg" class="muted"></span>
+      </form>
+    </section>
+
+    <!-- Step 2: 介绍页（即使已登录也先到这里） -->
+    <section id="step-intro" class="card" style="display:none">
+      <div class="center" style="gap:8px">
+        <div class="big">🍰 轻松说明</div>
+        <p class="muted" style="text-align:center">
+          本测试包含 10 题，一次只显示一道。<br>
+          采用五点量表：非常不同意 / 不同意 / 中立 / 同意 / 非常同意。<br>
+          完成后会给出 <strong>0–100 分</strong> 的直观得分与分析。
+        </p>
+      </div>
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:10px">
+        <button class="btn btn-primary" id="startBtn">开始测试</button>
+        <button class="btn btn-danger" id="logoutBtn">更换验证码/退出</button>
+      </div>
+    </section>
+
+    <!-- Step 3: 单题模式 -->
+    <section id="step-quiz" class="card" style="display:none">
+      <div style="display:grid; gap:12px">
+        <div class="progress"><span id="bar"></span></div>
+        <div><span class="qnum" id="qnum">Q1</span></div>
+        <div id="qtext" class="big">题目加载中...</div>
+        <div class="options" id="options"></div>
+        <div class="muted" id="quizMsg"></div>
+      </div>
+    </section>
+
+    <!-- Step 4: 分析结果（独立一栏，分数大） -->
+    <section id="step-result" class="card result-card" style="display:none">
+      <div class="score-wrap">
+        <div class="big">📊 你的恋爱占有欲指数</div>
+        <div class="score" id="score">0</div>
+        <div id="scoreBadge" class="badge">等级</div>
+
+        <div class="meter">
+          <div class="bar"><span id="scoreBar"></span></div>
+          <div class="ticks">
+            <span>0（自由自在）</span>
+            <span>50（恰到好处）</span>
+            <span>100（爱到极致）</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="advice" class="muted" style="margin-top:12px"></div>
+
+      <ul class="legend">
+        <li>0–25 分：<strong>较低（自由自在）</strong> – 给伴侣充分自由与信任，同时记得表达投入。</li>
+        <li>26–50 分：<strong>适中（恰到好处）</strong> – 平衡信任与关注，保持开放沟通。</li>
+        <li>51–75 分：<strong>较强（需要注意）</strong> – 为彼此保留空间，学会用“说明需求”替代“控制”。</li>
+        <li>76–100 分：<strong>强烈</strong> – 可能带来压力，建议强化边界感与安全感建设。</li>
+      </ul>
+
+      <div style="display:flex; gap:8px; margin-top:12px; justify-content:center">
+        <button class="btn" id="retry">再测一次</button>
+        <button class="btn" id="viewLast">查看最近一次结果</button>
+        <button class="btn btn-danger" id="logoutBtn2">更换验证码/退出</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="year"></span> 恋爱占有欲测试 · 可爱版</div>
+  </footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+const el = id => document.getElementById(id);
+const show = (id, v=true) => el(id).style.display = v ? '' : 'none';
+
+// 进入站点时：如果已登录，不直接开测，先到“介绍测试”页
+fetch('/api/me').then(r=>r.json()).then(d=>{
+  if (d.ok && d.me) {
+    show('step-invite', false);
+    show('step-intro', true);
+  }
+}).catch(()=>{});
+
+// 绑定验证码
+el('inviteForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  el('inviteMsg').textContent = '正在绑定...';
+  const code = el('code').value.trim();
+  const res = await fetch('/api/claim-invite', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ code })
+  });
+  const d = await res.json();
+  if (d.ok) {
+    el('inviteMsg').textContent = '成功！';
+    show('step-invite', false);
+    show('step-intro', true);
+  } else {
+    el('inviteMsg').textContent = '失败：' + (d.error||'未知错误');
+  }
+});
+
+// 登出（更换验证码）
+async function logoutAndBack(){
+  await fetch('/api/logout', { method:'POST' });
+  show('step-intro', false);
+  show('step-result', false);
+  show('step-quiz', false);
+  show('step-invite', true);
+}
+el('logoutBtn')?.addEventListener('click', logoutAndBack);
+el('logoutBtn2')?.addEventListener('click', logoutAndBack);
+
+// 题库（10题）
+const ITEMS = [
+  '我会希望伴侣把更多时间留给我。',
+  '当我联系不上伴侣时，我会非常不安。',
+  '我相信伴侣在我不在时也会自律。',
+  '当伴侣与他人走得近时，我会感到占有欲。',
+  '我在关系中需要保有一定的个人空间。',
+  '即使在亲密关系里，我也希望保留独立的决定权。',
+  '当我感觉被忽视时，会想要更强的控制。',
+  '我常担心伴侣会否定或离开我。',
+  '我更倾向于先选择信任而非怀疑。',
+  '我不喜欢对方过度干涉我的日常安排。'
+];
+
+const OPTIONS = [
+  { label:'非常不同意', value:1 },
+  { label:'不同意', value:2 },
+  { label:'中立', value:3 },
+  { label:'同意', value:4 },
+  { label:'非常同意', value:5 },
+];
+
+// 先显示介绍页 → 点“开始测试”才进入问卷
+el('startBtn').addEventListener('click', startQuiz);
+
+let idx = 0;
+let answers = [];
+
+function startQuiz(){
+  show('step-intro', false);
+  show('step-quiz', true);
+  idx = 0; answers = [];
+  renderQuestion();
+}
+
+function renderQuestion(){
+  el('qnum').textContent = `Q${idx+1} / ${ITEMS.length}`;
+  el('qtext').textContent = ITEMS[idx];
+  const bar = Math.round((idx) / ITEMS.length * 100);
+  el('bar').style.width = bar + '%';
+  const optWrap = el('options');
+  optWrap.innerHTML = '';
+  OPTIONS.forEach(o=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'option';
+    btn.textContent = o.label;
+    btn.addEventListener('click', ()=> choose(o.value));
+    optWrap.appendChild(btn);
+  });
+}
+
+function choose(val){
+  answers[idx] = val;
+  if (idx < ITEMS.length - 1){
+    idx++;
+    renderQuestion();
+  } else {
+    submitAll();
+  }
+}
+
+function renderResultPayload(payload){
+  const s = payload.scores?.composite100 ?? 0;
+  el('score').textContent = s;
+  el('scoreBar').style.width = s + '%';
+
+  const badge = el('scoreBadge');
+  badge.className = 'badge';
+  if (s >= 76) { badge.classList.add('badge-very'); badge.textContent = '强烈'; }
+  else if (s >= 51) { badge.classList.add('badge-high'); badge.textContent = '较强（需要注意）'; }
+  else if (s >= 26) { badge.classList.add('badge-mid'); badge.textContent = '适中（恰到好处）'; }
+  else { badge.classList.add('badge-low'); badge.textContent = '较低（自由自在）'; }
+
+  el('advice').textContent = payload.analysis;
+}
+
+async function submitAll(){
+  const res = await fetch('/api/submit', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ answers })
+  });
+  const d = await res.json();
+  if (!d.ok){ el('quizMsg').textContent = '提交失败：' + (d.error||'未知错误'); return; }
+  show('step-quiz', false);
+  show('step-result', true);
+  renderResultPayload(d);
+}
+
+el('retry').addEventListener('click', ()=>{
+  show('step-result', false);
+  show('step-intro', true); // 回到介绍，再开始
+});
+
+el('viewLast').addEventListener('click', async ()=>{
+  const d = await fetch('/api/result').then(r=>r.json());
+  if (d.ok && d.result) {
+    show('step-quiz', false); show('step-result', true);
+    renderResultPayload({ scores: d.result.scores, analysis: d.result.analysis });
+  }
+});
+</script>
+</body>
+</html>
